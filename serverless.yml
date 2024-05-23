@@ -1,0 +1,122 @@
+org: emmywork
+app: aws-app
+service: aws-job-svc
+frameworkVersion: '3'
+useDotenv: true
+
+plugins:
+  - serverless-dotenv-plugin
+  - serverless-plugin-typescript
+  - serverless-appsync-plugin
+  - serverless-prune-plugin
+  - serverless-appsync-simulator
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: ${env:NODE_VERSION}
+  region: ${env:AWS_REGION}
+  architecture: arm64
+  memorySize: 512
+  timeout: 30
+
+package:
+  individually: true
+  patterns:
+    - 'schema.graphql'
+
+functions:
+  getJobDetail:
+    handler: functions/queries/getJobDetail.handler
+  getCandidateDetail:
+    handler: functions/queries/getCandidateDetail.handler
+  listJobs:
+    handler: functions/queries/listJobs.handler
+  createJob:
+    handler: functions/mutations/createJob.handler
+  updateJob:
+    handler: functions/mutations/updateJob.handler
+  deleteJob:
+    handler: functions/mutations/createJob.handler
+
+custom:
+  dotenv:
+    include:
+      - NODE_ENV
+      - MONGODB_WORK_CONN
+  appsync-simulator:
+    location: '.build'
+    watch: false
+    apiKey: 'tce-mockapikey'
+  appSync:
+    name: ${env:SERVICE_NAME}-${env:APPSYNC_STAGE_SHORTNAME}
+    appId: ${env:APPSYNC_APP_ID}
+    domain:
+      name: ${env:APPSYNC_CUSTOM_DOMAIN}
+      certificateArn: ${env:APPSYNC_CUSTOM_DOMAIN_CERT_ARN}
+    authenticationType: API_KEY
+    additionalAuthenticationProviders:
+      - authenticationType: AMAZON_COGNITO_USER_POOLS
+        userPoolConfig:
+          awsRegion: ${env:COGNITO_USER_POOL_REGION}
+          userPoolId: ${env:COGNITO_USER_POOL_ID}
+    mappingTemplates:
+      - type: Query
+        field: getJobDetail
+        dataSource: getJobDetailFunction
+        request: false
+        response: false
+      - type: Query
+        field: getCandidateDetail
+        dataSource: getCandidateDetailFunction
+        request: false
+        response: false
+      - type: Query
+        field: listJobs
+        dataSource: listJobsFunction
+        request: false
+        response: false
+      - type: Mutation
+        field: createJob
+        dataSource: createJobFunction
+        request: false
+        response: false
+      - type: Mutation
+        field: updateJob
+        dataSource: updateJobFunction
+        request: false
+        response: false
+      - type: Mutation
+        field: deleteJob
+        dataSource: deleteJobFunction
+        request: false
+        response: false
+    dataSources:
+      - type: AWS_LAMBDA
+        name: getJobDetailFunction
+        config:
+          functionName: getJobDetail
+      - type: AWS_LAMBDA
+        name: getCandidateDetailFunction
+        config:
+          functionName: getCandidateDetail
+      - type: AWS_LAMBDA
+        name: listJobsFunction
+        config:
+          functionName: listJobs
+      - type: AWS_LAMBDA
+        name: createJobFunction
+        config:
+          functionName: createJob
+      - type: AWS_LAMBDA
+        name: updateJobFunction
+        config:
+          functionName: updateJob
+      - type: AWS_LAMBDA
+        name: deleteJobFunction
+        config:
+          functionName: deleteJob
+  prune:
+    automatic: true
+    includeLayers: true
+    number: 3

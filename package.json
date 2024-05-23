@@ -1,0 +1,40 @@
+{
+  "name": "job-board-be",
+  "version": "1.0.0",
+  "description": "Backend repo for job board platform that allow users to publish and view job listings",
+  "scripts": {
+    "dev": "yarn test && rm -rf .build && sls offline start",
+    "deploy": "sls deploy --aws-profile personal --stage dev",
+    "deploy:prod": "sls deploy --aws-profile personal --stage prod",
+    "deploy:all": "sls deploy --aws-profile personal --stage dev && sls deploy --aws-profile personal  --stage prod",
+    "test": "jest --runInBand --force-exit --setupFiles=dotenv/config"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emmyrosyida/job-board-be.git"
+  },
+  "author": "Emmy Rosyida",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/emmyrosyida/job-board-be/issues"
+  },
+  "homepage": "https://github.com/emmyrosyida/job-board-be#readme",
+  "dependencies": {
+    "@aws-sdk/client-lambda": "^3.310.0",
+    "dotenv": "^16.0.3",
+    "mongoose": "^6.8.1"
+  },
+  "devDependencies": {
+    "serverless": "^3.38.0",
+    "serverless-appsync-plugin": "^1.14.0",
+    "serverless-appsync-simulator": "^0.20.0",
+    "serverless-dotenv-plugin": "^4.0.2",
+    "serverless-offline": "^12.0.4",
+    "serverless-plugin-typescript": "^2.1.4",
+    "serverless-prune-plugin": "^2.0.2",
+    "typescript": "^4.9.5"
+  },
+  "resolutions": {
+    "serverless-appsync-simulator/cfn-resolver-lib": "1.1.7"
+  }
+}

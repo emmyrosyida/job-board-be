@@ -1,0 +1,25 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+# Queries
+type Query {
+  getJobDetail: String
+  getCandidateDetail: String
+  listJobs: String
+}
+
+type Mutation {
+  createJob(input: JobInput): String
+  deleteJob(input: JobInput): String
+  updateJob(input: JobInput): String
+  updateJobStatus(input: JobInput): String
+}
+
+# Types
+
+# Input
+input JobInput {
+  job: String!
+}
