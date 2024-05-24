@@ -29,18 +29,26 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
           node-version: 20.13.1
       - name: Install dependencies
         run: yarn
+
+       - name: Debug Environment Variables
+        run: |
+          echo "AWS_REGION: $AWS_REGION"
+          echo "SERVICE_NAME: $SERVICE_NAME"
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
+      
       - name: Deploy to AWS
         run: yarn serverless deploy --stage develop
         env:
