@@ -8,6 +8,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    environment:
+      name: develop
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -16,10 +18,8 @@ jobs:
       - run: yarn install
       - name: Run Test
         run: yarn test
-        environment:
-          name: develop
+        env:
           MONGODB_WORK_CONN: ${{ secrets.MONGODB_WORK_CONN }}
-
   deploy:
     runs-on: ubuntu-latest
     needs: test
