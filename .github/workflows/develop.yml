@@ -60,6 +60,7 @@ jobs:
           NODE_ENV: development
           SERVICE_NAME: ${{ secrets.SERVICE_NAME }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
+          APPSYNC_STAGE_SHORTNAME: ${{ secrets.APPSYNC_STAGE_SHORTNAME }}
           MONGODB_WORK_CONN: ${{ secrets.MONGODB_WORK_CONN }}
           APPSYNC_APP_ID: ${{ secrets.APPSYNC_APP_ID }}
           APPSYNC_CUSTOM_DOMAIN: ${{ secrets.APPSYNC_CUSTOM_DOMAIN }}
