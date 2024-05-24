@@ -1,4 +1,4 @@
-name: Deploy AppSync Prod
+name: Deploy AppSync Develop
 
 on:
   push:

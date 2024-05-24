@@ -1,4 +1,4 @@
-name: Deploy AppSync Prod
+name: Deploy AppSync Main
 
 on:
   push:
@@ -8,31 +8,65 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    environment:
+      name: main
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 20.13.1
-      - run: yarn install
-      - name: Run Tests
+      - run: yarn
+      - name: Run Test
         run: yarn test
         env:
-          MONGODB_WORK_CONN: ${{ secrets.MONGODB_WORK_CONN }} # Add any env vars needed for testing
+          MONGODB_WORK_CONN: ${{ secrets.MONGODB_WORK_CONN }}
 
   deploy:
-    runs-on: ubuntu-latest
+    name: Deploy
     needs: test
+
+    environment:
+      name: main
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
         with:
           node-version: 20.13.1
-      - run: yarn install
-      - name: Serverless Deploy
+      - name: Install dependencies
+        run: yarn
+
+      - name: Debug Environment Variables
+        run: |
+          echo "AWS_REGION: $AWS_REGION"
+          echo "SERVICE_NAME: $SERVICE_NAME"
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Deploy to AWS
         uses: serverless/github-action@v3.2
         with:
-          args: deploy --stage dev
+          args: |
+            export AWS_REGION=${{ secrets.AWS_REGION }}
+            export NODE_VERSION=${{ secrets.NODE_VERSION }}
+            yarn serverless deploy --stage develop
         env:
-          NODE_ENV: ${{ secrets.NODE_ENV }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          NODE_ENV: development
+          SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
+          SERVICE_NAME: ${{ secrets.SERVICE_NAME }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          APPSYNC_STAGE_SHORTNAME: ${{ secrets.APPSYNC_STAGE_SHORTNAME }}
+          MONGODB_WORK_CONN: ${{ secrets.MONGODB_WORK_CONN }}
+          APPSYNC_APP_ID: ${{ secrets.APPSYNC_APP_ID }}
+          APPSYNC_CUSTOM_DOMAIN: ${{ secrets.APPSYNC_CUSTOM_DOMAIN }}
+          APPSYNC_CUSTOM_DOMAIN_CERT_ARN: ${{ secrets.APPSYNC_CUSTOM_DOMAIN_CERT_ARN }}
+          COGNITO_USER_POOL_REGION: ${{ secrets.COGNITO_USER_POOL_REGION }}
+          COGNITO_USER_POOL_ID: ${{ secrets.COGNITO_USER_POOL_ID }}
