@@ -16,13 +16,18 @@ This project provides a GraphQL API for managing job listings, built using AWS A
 1. Clone this repository.
 2. Install dependencies: `yarn install`.
 3. Configure your AWS credentials and environment (e.g., using environment variables or AWS profiles).
-4. Deploy the project: `yarn deploy` (or `yarn deploy:prod` for production).
+4. Deploy the project: `yarn deploy` (eg: `yarn deploy:prod` for production).
 5. Run the project locally: `yarn dev`.
 6. Test the project API: `yarn test`.
 
 ## Usage
 Once deployed, you can interact with the API using any GraphQL client (e.g., Insomnia). 
-The API endpoint can be found in the `Insomnia_2024-05-24.json`.
+The API endpoint can be found in the `Insomnia_2024-05-24.json`. 
+
+Please use environment `develop` for testing the APIs. 
+
+For authentication, need to install Insomnia plugin:
+`https://insomnia.rest/plugins/insomnia-plugin-aws-cognito-token`
 
 ## API Endpoints
 | Operation      | Endpoint      | Description                             |
