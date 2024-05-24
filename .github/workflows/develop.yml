@@ -52,12 +52,15 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Deploy to AWS
-        run: |
-          export AWS_REGION=${{ secrets.AWS_REGION }}
-          export NODE_VERSION=${{ secrets.NODE_VERSION }}
-          yarn serverless deploy --stage develop
+        uses: serverless/github-action@v3.2
+        with:
+          args: |
+            export AWS_REGION=${{ secrets.AWS_REGION }}
+            export NODE_VERSION=${{ secrets.NODE_VERSION }}
+            yarn serverless deploy --stage develop
         env:
           NODE_ENV: development
+          SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
           SERVICE_NAME: ${{ secrets.SERVICE_NAME }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
           APPSYNC_STAGE_SHORTNAME: ${{ secrets.APPSYNC_STAGE_SHORTNAME }}
