@@ -37,7 +37,9 @@ functions:
   updateJob:
     handler: functions/mutations/updateJob.handler
   deleteJob:
-    handler: functions/mutations/createJob.handler
+    handler: functions/mutations/deleteJob.handler
+  updateJobStatus:
+    handler: functions/mutations/updateJobStatus.handler
 
 custom:
   dotenv:
@@ -47,7 +49,7 @@ custom:
   appsync-simulator:
     location: '.build'
     watch: false
-    apiKey: 'tce-mockapikey'
+    apiKey: 'job-mockapikey'
   appSync:
     name: ${env:SERVICE_NAME}-${env:APPSYNC_STAGE_SHORTNAME}
     appId: ${env:APPSYNC_APP_ID}
@@ -91,6 +93,11 @@ custom:
         dataSource: deleteJobFunction
         request: false
         response: false
+      - type: Mutation
+        field: updateJobStatus
+        dataSource: updateJobStatusFunction
+        request: false
+        response: false
     dataSources:
       - type: AWS_LAMBDA
         name: getJobDetailFunction
@@ -116,6 +123,10 @@ custom:
         name: deleteJobFunction
         config:
           functionName: deleteJob
+      - type: AWS_LAMBDA
+        name: updateJobStatusFunction
+        config:
+          functionName: updateJobStatus
   prune:
     automatic: true
     includeLayers: true

@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "description": "Backend repo for job board platform that allow users to publish and view job listings",
   "scripts": {
-    "dev": "yarn test && rm -rf .build && sls offline start",
+    "dev:test": "yarn test && rm -rf .build && sls offline start",
+    "dev": "rm -rf .build && sls offline start",
     "deploy": "sls deploy --aws-profile personal --stage dev",
     "deploy:prod": "sls deploy --aws-profile personal --stage prod",
     "deploy:all": "sls deploy --aws-profile personal --stage dev && sls deploy --aws-profile personal  --stage prod",
-    "test": "jest --runInBand --force-exit --setupFiles=dotenv/config"
+    "test": "rm -rf .build  && jest --runInBand --force-exit --setupFiles=dotenv/config"
   },
   "repository": {
     "type": "git",
@@ -25,6 +26,8 @@
     "mongoose": "^6.8.1"
   },
   "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "jest": "^29.7.0",
     "serverless": "^3.38.0",
     "serverless-appsync-plugin": "^1.14.0",
     "serverless-appsync-simulator": "^0.20.0",
@@ -32,6 +35,7 @@
     "serverless-offline": "^12.0.4",
     "serverless-plugin-typescript": "^2.1.4",
     "serverless-prune-plugin": "^2.0.2",
+    "ts-jest": "^29.1.3",
     "typescript": "^4.9.5"
   },
   "resolutions": {
