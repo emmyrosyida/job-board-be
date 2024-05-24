@@ -16,7 +16,8 @@ jobs:
       - run: yarn install
       - name: Run Test
         run: yarn test
-        env:
+        environment:
+          name: develop
           MONGODB_WORK_CONN: ${{ secrets.MONGODB_WORK_CONN }}
 
   deploy:
